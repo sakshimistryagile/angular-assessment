@@ -1,0 +1,54 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IUser, IUserList, UpdateUser } from '../../../models/user.model';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectUsers } from '../../store/selectors/user.selector';
+import { userAction } from '../../store/actions/user.action';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-edit-user',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './edit-user.component.html',
+  styleUrl: './edit-user.component.css',
+})
+export class EditUserComponent {
+  constructor(
+    private store: Store<{ users: any }>,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
+
+  editUser!: FormGroup;
+  prod!: IUser;
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['user']) {
+        this.prod = JSON.parse(params['user']);
+      }
+    });
+    this.editUser = new FormGroup({
+      userName: new FormControl(this.prod.userName, [Validators.required]),
+      mobileNo: new FormControl(this.prod.mobileNo, [Validators.required]),
+      point: new FormControl(this.prod.point, [Validators.required]),
+    });
+  }
+  onEditUserSubmit() {
+    const product: UpdateUser = {
+      userName: this.editUser.value.userName,
+      mobileNo: this.editUser.value.mobileNo,
+      point: +this.editUser.value.point,
+      _id: this.prod._id,
+    };
+    this.store.dispatch(userAction.editUser({ payload: product }));
+    this.router.navigate(['/users']);
+  }
+}

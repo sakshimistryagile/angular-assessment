@@ -1,0 +1,63 @@
+<ng-container>
+  <div>
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        [formControl]="searchControl"
+        placeholder="Search products"
+      />
+    </mat-form-field>
+  </div>
+</ng-container>
+<div>
+  <button class="btn btn-primary" (click)="addProduct($event)">
+    add-product
+  </button>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Sr No</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Product Description</th>
+      <th scope="col">Product Points</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="posts$ | async as posts; else empty">
+      <ng-container
+        *ngFor="let prod of posts.data.adminProductList; let i = index"
+      >
+        <tr>
+          <th scope="row">{{ i + 1 + (args.page - 1) * args.limit }}</th>
+          <td>{{ prod.productName }}</td>
+          <td>{{ prod.productDescription }}</td>
+          <td>{{ prod.productPoints }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="editProduct(prod)">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+<ng-container *ngIf="posts$ | async as posts">
+  <mat-paginator
+    [length]="posts?.data?.total_records || 0"
+    [pageIndex]="args.page - 1"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</ng-container>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="4">Loading...</td>
+  </tr>
+</ng-template>

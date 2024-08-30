@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3>Add Product</h3>
+    <hr />
+    <form [formGroup]="addProduct" (ngSubmit)="onAddProductSubmit()">
+      <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text" class="form-control" formControlName="productName" />
+        <div
+          *ngIf="
+            addProduct.get('productName')?.touched &&
+            !addProduct.get('productName')?.valid
+          "
+        >
+          <div *ngIf="addProduct.get('productName')?.errors?.['required']">
+            productName is required
+          </div>
+          <div *ngIf="addProduct.get('productName')?.errors?.['productName']">
+            Invalid ProductName
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Product Description</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="productDescription"
+        />
+        <div
+          *ngIf="
+            addProduct.get('productDescription')?.touched &&
+            !addProduct.get('productDescription')?.valid
+          "
+        >
+          <div>ProductDescription is required</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Product Point</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="productPoints"
+        />
+        <div
+          *ngIf="
+            addProduct.get('productPoints')?.touched &&
+            !addProduct.get('productPoints')?.valid
+          "
+        >
+          <div *ngIf="addProduct.get('productPoints')?.errors?.['required']">
+            productPoints is required
+          </div>
+          <div
+            *ngIf="addProduct.get('productPoints')?.errors?.['productPoints']"
+          >
+            Invalid productPoints
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!addProduct.valid"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

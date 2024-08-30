@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3>Add User</h3>
+    <hr />
+    <form [formGroup]="addUser" (ngSubmit)="onaddUserSubmit()">
+      <div class="mb-3">
+        <label>UserName</label>
+        <input type="text" class="form-control" formControlName="userName" />
+        <div
+          *ngIf="
+            addUser.get('userName')?.touched && !addUser.get('userName')?.valid
+          "
+        >
+          <div *ngIf="addUser.get('userName')?.errors?.['required']">
+            UserName is required
+          </div>
+          <div *ngIf="addUser.get('userName')?.errors?.['userName']">
+            Invalid userName
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>MobileNo</label>
+        <input type="text" class="form-control" formControlName="mobileNo" />
+        <div
+          *ngIf="
+            addUser.get('mobileNo')?.touched && !addUser.get('mobileNo')?.valid
+          "
+        >
+          <div>MobileNo is required</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Point</label>
+        <input type="text" class="form-control" formControlName="point" />
+        <div
+          *ngIf="addUser.get('point')?.touched && !addUser.get('point')?.valid"
+        >
+          <div *ngIf="addUser.get('point')?.errors?.['required']">
+            point is required
+          </div>
+          <div *ngIf="addUser.get('point')?.errors?.['point']">
+            Invalid point
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!addUser.valid"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

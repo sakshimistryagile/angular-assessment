@@ -1,0 +1,38 @@
+<div class="container">
+  <h1>Groceries</h1>
+
+  <select (change)="onTypeChange($event)" class="type-select">
+    <option value="">Select type</option>
+    <option value="fruit">Fruit</option>
+    <option value="snacks">Snacks</option>
+  </select>
+
+  <ul class="grocery-list">
+    <ng-container *ngIf="filteredGroceries$ | async as groceries; else loading">
+      <li
+        *ngFor="let groc of groceries; trackBy: trackByGroceryId"
+        class="grocery-item"
+      >
+        <span class="increment-button" (click)="increment(groc)">+</span>
+        {{ groc.name }}
+        <span class="decrement-button" (click)="decrement(groc)">-</span>
+      </li>
+    </ng-container>
+
+    <ng-template #loading>
+      <li *ngIf="groceries$ | async as groceries; else empty">
+        <ng-container *ngFor="let groc of groceries; trackBy: trackByGroceryId">
+          <li class="grocery-item">
+            <span class="increment-button" (click)="increment(groc)">+</span>
+            {{ groc.name }}
+            <span class="decrement-button" (click)="decrement(groc)">-</span>
+          </li>
+        </ng-container>
+      </li>
+    </ng-template>
+
+    <ng-template #empty>
+      <li>Loading...</li>
+    </ng-template>
+  </ul>
+</div>

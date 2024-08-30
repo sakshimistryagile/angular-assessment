@@ -1,0 +1,78 @@
+<div>
+  <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      [formControl]="searchControl"
+      placeholder="Search products"
+    />
+  </mat-form-field>
+</div>
+<div>
+  <button class="btn btn-primary" (click)="addUser($event)">Add Users</button>
+</div>
+
+<table
+  mat-table
+  [dataSource]="dataSource$"
+  matSort
+  (matSortChange)="onSortChange($event)"
+>
+  <!-- Sr No Column -->
+  <ng-container matColumnDef="_id">
+    <th mat-header-cell *matHeaderCellDef>Sr No</th>
+    <td mat-cell *matCellDef="let element">{{ element._id }}</td>
+  </ng-container>
+
+  <!-- Depot Column -->
+  <ng-container matColumnDef="depot">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Depot</th>
+    <td mat-cell *matCellDef="let element">{{ element.depot }}</td>
+  </ng-container>
+
+  <!-- User Name Column -->
+  <ng-container matColumnDef="userName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.userName }}</td>
+  </ng-container>
+
+  <!-- Mobile No Column -->
+  <ng-container matColumnDef="mobileNo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile No</th>
+    <td mat-cell *matCellDef="let element">{{ element.mobileNo }}</td>
+  </ng-container>
+
+  <!-- Point Column -->
+  <ng-container matColumnDef="point">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Point</th>
+    <td mat-cell *matCellDef="let element">{{ element.point }}</td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <button class="btn btn-primary" (click)="editUser(element)">Edit</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<ng-container *ngIf="users$ | async as users">
+  <mat-paginator
+    [length]="users?.data?.total_records || 0"
+    [pageIndex]="args.page - 1"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</ng-container>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="6">Loading...</td>
+  </tr>
+</ng-template>

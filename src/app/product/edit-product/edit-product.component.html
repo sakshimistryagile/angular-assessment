@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h3>Edit Product</h3>
+    <hr />
+    <form [formGroup]="editProduct" (ngSubmit)="onEditProductSubmit()">
+      <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text" class="form-control" formControlName="productName" />
+        <div
+          *ngIf="
+            editProduct.get('productName')?.touched &&
+            !editProduct.get('productName')?.valid
+          "
+        >
+          <div *ngIf="editProduct.get('productName')?.errors?.['required']">
+            productName is required
+          </div>
+          <div *ngIf="editProduct.get('productName')?.errors?.['productName']">
+            Invalid ProductName
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Product Description</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="productDescription"
+        />
+        <div
+          *ngIf="
+            editProduct.get('productDescription')?.touched &&
+            !editProduct.get('productDescription')?.valid
+          "
+        >
+          <div>ProductDescription is required</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Product Point</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="productPoints"
+        />
+        <div
+          *ngIf="
+            editProduct.get('productPoints')?.touched &&
+            !editProduct.get('productPoints')?.valid
+          "
+        >
+          <div *ngIf="editProduct.get('productPoints')?.errors?.['required']">
+            productPoints is required
+          </div>
+          <div
+            *ngIf="editProduct.get('productPoints')?.errors?.['productPoints']"
+          >
+            Invalid productPoints
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!editProduct.valid"
+        >
+          Edit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
