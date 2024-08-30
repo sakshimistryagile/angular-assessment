@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, IUserList, UpdateUser } from '../../../models/user.model';
 import {
@@ -26,29 +26,42 @@ export class EditUserComponent {
     private router: Router,
     private route: ActivatedRoute,
   ) {}
-
+  @Input() user!: IUser;
+  @Output() userUpdated = new EventEmitter<UpdateUser>();
   editUser!: FormGroup;
-  prod!: IUser;
+  // prod!: IUser;
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (params['user']) {
-        this.prod = JSON.parse(params['user']);
-      }
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   if (params['user']) {
+    //     this.prod = JSON.parse(params['user']);
+    //   }
+    // });
     this.editUser = new FormGroup({
-      userName: new FormControl(this.prod.userName, [Validators.required]),
-      mobileNo: new FormControl(this.prod.mobileNo, [Validators.required]),
-      point: new FormControl(this.prod.point, [Validators.required]),
+      userName: new FormControl(this.user.userName, [
+        Validators.required,
+        Validators.maxLength(20),
+        Validators.pattern(/^\S*$/) // No spaces allowed
+      ]),
+      mobileNo: new FormControl(this.user.mobileNo, [
+        Validators.required,
+        Validators.pattern(/^\d{10}$/) // Exactly 10 digits
+      ]),
+      point: new FormControl(this.user.point,[
+        Validators.required,
+        Validators.min(1),
+        Validators.max(100)
+      ]),
     });
   }
   onEditUserSubmit() {
-    const product: UpdateUser = {
+    const updatedUser: UpdateUser = {
       userName: this.editUser.value.userName,
       mobileNo: this.editUser.value.mobileNo,
       point: +this.editUser.value.point,
-      _id: this.prod._id,
+      _id: this.user._id,
     };
-    this.store.dispatch(userAction.editUser({ payload: product }));
-    this.router.navigate(['/users']);
+    this.userUpdated.emit(updatedUser);
+    // this.store.dispatch(userAction.editUser({ payload: product }));
+    // this.router.navigate(['/users']);
   }
 }

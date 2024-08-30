@@ -76,3 +76,8 @@
     <td colspan="6">Loading...</td>
   </tr>
 </ng-template>
+<app-edit-user
+  *ngIf="selectedUser && modelShow"
+  [user]="selectedUser"
+  (userUpdated)="onUserUpdated($event)">
+</app-edit-user>

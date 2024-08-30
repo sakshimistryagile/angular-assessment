@@ -28,9 +28,20 @@ export class AddUserComponent {
   addUser!: FormGroup;
   ngOnInit(): void {
     this.addUser = new FormGroup({
-      userName: new FormControl('', [Validators.required]),
-      mobileNo: new FormControl('', [Validators.required]),
-      point: new FormControl('', [Validators.required]),
+      userName: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(20),
+        Validators.pattern(/^\S*$/) // No spaces allowed
+      ]),
+      mobileNo: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{10}$/) // Exactly 10 digits
+      ]),
+      point: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(100)
+      ]),
     });
   }
   onaddUserSubmit() {

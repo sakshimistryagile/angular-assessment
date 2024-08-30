@@ -30,7 +30,7 @@ export class LoginEffects {
         tap((action) => {
           //   this.store.dispatch(setErrorMessage({ message: '' }));
           if (action.payload.data) {
-            this.router.navigate(['/']);
+            this.router.navigate(['/users']);
           }
         }),
       );

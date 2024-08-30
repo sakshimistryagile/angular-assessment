@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { IUser, IUserList, IUserListReq } from '../../../models/user.model';
+import { IUser, IUserList, IUserListReq, UpdateUser } from '../../../models/user.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
@@ -12,6 +12,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { selectUsers } from '../../store/selectors/user.selector';
+import { EditUserComponent } from "../edit-user/edit-user.component";
+import { userAction } from '../../store/actions/user.action';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -23,12 +25,15 @@ import { selectUsers } from '../../store/selectors/user.selector';
     ReactiveFormsModule,
     MatSortModule,
     MatInputModule,
-  ],
+    EditUserComponent
+],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent {
   users$?: Observable<IUserList>;
+  selectedUser!: IUser;
+  modelShow!:boolean; 
   args: IUserListReq = {
     page: 1,
     limit: 10,
@@ -36,6 +41,7 @@ export class UserListComponent {
     column: '',
     order: '',
   };
+  currentItem = 'Television';
   pageSize = this.args.limit;
   searchControl = new FormControl('');
   dataSource$ = new MatTableDataSource<any>([]);
@@ -76,13 +82,20 @@ export class UserListComponent {
     this.router.navigate(['/users/add-user']);
   }
 
-  editUser(prod: IUser) {
+  editUser(user: IUser) {
     // this.router.navigate([`/users/edit-user/${prod._id}`]);
-    this.router.navigate(['/users/edit-user'], {
-      queryParams: { user: JSON.stringify(prod) },
-    });
+    // this.router.navigate(['/users/edit-user'], {
+    //   queryParams: { user: JSON.stringify(user) },
+    // });
+    this.modelShow = true;
+    this.selectedUser = user;
   }
-
+  onUserUpdated(updatedUser: UpdateUser) {
+    // Handle the updated user here, e.g., dispatch an action to update the store
+    this.store.dispatch(userAction.editUser({ payload: updatedUser }));
+    this.store.dispatch(postAction.loadUsers(this.args));
+    this.modelShow = false;
+  }
   onPageChange(event: any): void {
     this.args.page = event.pageIndex + 1;
     this.args.limit = event.pageSize;
